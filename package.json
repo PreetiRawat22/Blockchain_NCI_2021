@@ -1,0 +1,22 @@
+{
+  "name": "blockchain_project",
+  "version": "1.0.0",
+  "description": "NCI_Blockchain_project",
+  "main": "contract.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://PreetiRawat22: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@github.com/PreetiRawat22/Blockchain_NCI_2021.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PreetiRawat22/Blockchain_NCI_2021/issues"
+  },
+  "homepage": "https://github.com/PreetiRawat22/Blockchain_NCI_2021#readme",
+  "dependencies": {
+    "web3": "^1.6.1"
+  }
+}
