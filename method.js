@@ -1,20 +1,16 @@
-//https://ropsten.infura.io/v3/c4a8db5374a94057ad93e4b96193c523
+//web3 dependency 
+const Web3=require('web3')
 
-const Web3= require("web3")
+//ethereumjs for transactions
+const Tx= require('ethereumjs-tx').Transaction;
 
-//to setup .env 
+//const {console}=require("console");
 require('dotenv').config()
-
 //need to capture values from .env file
-infuraTokenValue = process.env.INFURA_TOKEN
-contractAddress = process.env.CONTRACT_ADDRESS
-ownerAddress = process.env.OWNER_ADDRESS
-
-//infuraURL to make remote procedural call to connect with etherium node
-const infuraURL="https://ropsten.infura.io/v3/c4a8db5374a94057ad93e4b96193c523";
-console.log(infuraURL);
-// create an instantance of web3 with infuraURL
-const web3 = new Web3(infuraURL);
+infuraTokenValue = process.env.INFURA_TOKEN;
+contractAddress = process.env.CONTRACT_ADDRESS;
+ownerAddress = process.env.OWNER_ADDRESS;
+secretPrivateKey = Buffer.from(process.env.SUPER_SECRET_PRIVATE_KEY, 'hex');
 
 const abi = [
 	{
@@ -240,50 +236,50 @@ const abi = [
 		"type": "function"
 	}
 ]
-//create an instance of contract object
-const contract = new web3.eth.Contract(abi, contractAddress);
-console.log("connected to contract on robsten network")
+const robstenUrl = "https://ropsten.infura.io/v3/"+infuraTokenValue;
+const web3 = new Web3(robstenUrl);
 
-const owner=ownerAddress
+//create an instance of contract
+const contract= new web3.eth.Contract(abi, contractAddress);
 
-//wrapper around methods of contract is created by using javascript
-const getTotalSupplyOfToken= async()=>{
-	let totSupply = await contract.methods.totalSupply().call();
-    return totSupply;
+//send transaction method
+const sendTransaction = async(rawData) => {
+    return await web3.eth.sendSignedTransaction(rawData);
 }
 
-//get name of currency
-const getName = async() => {
-    let name = await contract.methods.getName().call();
-    return name
+//transfer token
+const transferToken = async(receiverAccount, amount) => {
+
+    
+    let transactionCount = await web3.eth.getTransactionCount(ownerAddress);
+    console.log("transaction count is " + transactionCount);
+
+    // generate tx data
+    const transactionObject = {
+        nonce: web3.utils.toHex(transactionCount),
+        gasLimit: web3.utils.toHex(500000),
+        gasPrice: web3.utils.toHex(web3.utils.toWei('100', 'gwei')),
+        to: contractAddress,
+        data: contract.methods.transfer(receiverAccount, amount).encodeABI()
+    }
+    // assign a chain id to the transaction object. robsten chanin id is 3. 
+    const transactionObj = new Tx(transactionObject, {chain: 'ropsten', hardfork: 'petersburg'})
+
+    // sign the transactionObj using super secret private key.
+    transactionObj.sign(secretPrivateKey);
+    console.log("transaction signed with super secret key")
+
+    //serialize the transaction
+    const serializedTx = transactionObj.serialize();
+    const rawData = '0x' + serializedTx.toString('hex');
+
+    console.log('about to send transaction' + rawData)
+
+    // broadcast the transaction
+    let transactionResponse = await sendTransaction(rawData);
+    console.log("transaction hash: " + transactionResponse.transactionHash)
+    console.log("transaction in block: " + transactionResponse.blockNumber)
 }
 
-//get balance of account
-const getBalance = async(owner) => {
-    let balance = await contract.methods.balanceOf(owner).call();
-    return balance;
-}
-
-//Decimal places information
-const getDecimalsInformation = async() => {
-    let decimals = await contract.methods.getDecimals().call();
-    return decimals;
-}
-
-//Get information about the synbol of token
-const getSymbolInformation = async() => {
-    let symbol = await contract.methods.getSymbol().call();
-    return symbol;
-}
-
-//const returnAllValues = async() => {
- //   console.log(await getTotalSupplyOfToken());
-  //  console.log(await getSymbolInformation());
-  //  console.log(await getName());
- //   console.log(await getDecimalsInformation());
-    //console.log(await getBalance(owner));
-//}
-//returnAllValues();
-//console.log("hello world")
-
-module.exports={getTotalSupplyOfToken,getName,getBalance,getDecimalsInformation,getSymbolInformation}
+module.exports={transferToken}
+//transferToken("0xAd7d9D11d860CB0c943678FB894F6f382DC39926", 100);

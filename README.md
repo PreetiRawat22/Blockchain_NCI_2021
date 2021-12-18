@@ -31,3 +31,32 @@ after reaching the folder BLOCKCHAIN_NCI_2021 of project. From the visual studio
 ``` git pull origin main ```
 
 
+create contract.js for redad-only interaction file
+to run it use below command:
+```node contract.js```
+ 
+ ##  view al running container ##
+ ```docker ps -a```
+
+### to see all images ###
+ ```docker image ls```
+
+ ### to build an image ###
+ ```docker build -t nci/blockchain .```
+
+### to run a image ###
+```  docker run -p 8090:8080 --name blockchain20233507 -d nci/blockchain```
+
+### to check for logs ###
+```docker logs blockchain20233507``
+
+### to view logs inside docker  ###
+``` docker logs -f [name] ```
+ ### to clear docker system ###
+ ```docker system prune -a```
+
+ ### remove docker images ###
+ ```  docker image prune -a -f```
+
+ ### To run the distribution ###
+ ```  curl http://localhost:8090/distribute ```
