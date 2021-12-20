@@ -14,6 +14,22 @@ secretPrivateKey = Buffer.from(process.env.SUPER_SECRET_PRIVATE_KEY, 'hex');
 
 const abi = [
 	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name_",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "symbol_",
+				"type": "string"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -132,7 +148,7 @@ const abi = [
 	},
 	{
 		"inputs": [],
-		"name": "getDecimals",
+		"name": "decimals",
 		"outputs": [
 			{
 				"internalType": "uint8",
@@ -144,8 +160,56 @@ const abi = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "spender",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "subtractedValue",
+				"type": "uint256"
+			}
+		],
+		"name": "decreaseAllowance",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "spender",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "addedValue",
+				"type": "uint256"
+			}
+		],
+		"name": "increaseAllowance",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
-		"name": "getName",
+		"name": "name",
 		"outputs": [
 			{
 				"internalType": "string",
@@ -158,7 +222,7 @@ const abi = [
 	},
 	{
 		"inputs": [],
-		"name": "getSymbol",
+		"name": "symbol",
 		"outputs": [
 			{
 				"internalType": "string",

@@ -1,4 +1,4 @@
-//https://ropsten.infura.io/v3/c4a8db5374a94057ad93e4b96193c523
+
 
 const Web3= require("web3")
 
@@ -11,12 +11,29 @@ contractAddress = process.env.CONTRACT_ADDRESS
 ownerAddress = process.env.OWNER_ADDRESS
 
 //infuraURL to make remote procedural call to connect with etherium node
-const infuraURL="https://ropsten.infura.io/v3/c4a8db5374a94057ad93e4b96193c523";
-console.log(infuraURL);
+const infuraURL="https://ropsten.infura.io/v3/"+infuraTokenValue;
+
 // create an instantance of web3 with infuraURL
 const web3 = new Web3(infuraURL);
 
+console.log('connected to web3');
 const abi = [
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name_",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "symbol_",
+				"type": "string"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
 	{
 		"anonymous": false,
 		"inputs": [
@@ -136,7 +153,7 @@ const abi = [
 	},
 	{
 		"inputs": [],
-		"name": "getDecimals",
+		"name": "decimals",
 		"outputs": [
 			{
 				"internalType": "uint8",
@@ -148,8 +165,56 @@ const abi = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "spender",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "subtractedValue",
+				"type": "uint256"
+			}
+		],
+		"name": "decreaseAllowance",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "spender",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "addedValue",
+				"type": "uint256"
+			}
+		],
+		"name": "increaseAllowance",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
-		"name": "getName",
+		"name": "name",
 		"outputs": [
 			{
 				"internalType": "string",
@@ -162,7 +227,7 @@ const abi = [
 	},
 	{
 		"inputs": [],
-		"name": "getSymbol",
+		"name": "symbol",
 		"outputs": [
 			{
 				"internalType": "string",
@@ -254,7 +319,7 @@ const getTotalSupplyOfToken= async()=>{
 
 //get name of currency
 const getName = async() => {
-    let name = await contract.methods.getName().call();
+    let name = await contract.methods.name().call();
     return name
 }
 
@@ -266,24 +331,14 @@ const getBalance = async(owner) => {
 
 //Decimal places information
 const getDecimalsInformation = async() => {
-    let decimals = await contract.methods.getDecimals().call();
+    let decimals = await contract.methods.decimals().call();
     return decimals;
 }
 
 //Get information about the synbol of token
 const getSymbolInformation = async() => {
-    let symbol = await contract.methods.getSymbol().call();
+    let symbol = await contract.methods.symbol().call();
     return symbol;
 }
-
-//const returnAllValues = async() => {
- //   console.log(await getTotalSupplyOfToken());
-  //  console.log(await getSymbolInformation());
-  //  console.log(await getName());
- //   console.log(await getDecimalsInformation());
-    //console.log(await getBalance(owner));
-//}
-//returnAllValues();
-//console.log("hello world")
 
 module.exports={getTotalSupplyOfToken,getName,getBalance,getDecimalsInformation,getSymbolInformation}
