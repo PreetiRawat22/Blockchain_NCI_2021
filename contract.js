@@ -341,4 +341,6 @@ const getSymbolInformation = async() => {
     return symbol;
 }
 
+
+
 module.exports={getTotalSupplyOfToken,getName,getBalance,getDecimalsInformation,getSymbolInformation}
